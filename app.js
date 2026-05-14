@@ -367,6 +367,9 @@ function renderTable() {
           <button class="btn btn-icon" title="Entrada rápida +1" onclick="quickMove('${p.id}', 1)">
             <i class="fas fa-plus"></i>
           </button>
+          <button class="btn btn-icon edit" title="Editar producto" onclick="openEditModal('${p.id}')">
+            <i class="fas fa-pen"></i>
+          </button>
           <button class="btn btn-icon del" title="Eliminar" onclick="askDelete('${p.id}')">
             <i class="fas fa-trash"></i>
           </button>
@@ -970,4 +973,84 @@ modalPdfConfirm.addEventListener("click", () => {
 
   modalPdf.style.display = "none";
   showToast(`📄 PDF generado con ${productos.length} productos`, "success");
+});
+
+// ══════════════════════════════════════════════════════════════
+//  MODAL EDITAR PRODUCTO
+// ══════════════════════════════════════════════════════════════
+const modalEdit        = document.getElementById("modal-edit");
+const editSubtitle     = document.getElementById("edit-subtitle");
+const editNombre       = document.getElementById("edit-nombre");
+const editMarca        = document.getElementById("edit-marca");
+const editUnidad       = document.getElementById("edit-unidad");
+const editCantidad     = document.getElementById("edit-cantidad");
+const editTotal        = document.getElementById("edit-total");
+const modalEditCancel  = document.getElementById("modal-edit-cancel");
+const modalEditConfirm = document.getElementById("modal-edit-confirm");
+
+let editTargetId = null;
+
+// Abrir modal con datos del producto
+window.openEditModal = function(id) {
+  const p = allProducts.find(p => p.id === id);
+  if (!p) return;
+
+  editTargetId        = id;
+  editNombre.value    = p.nombre   || "";
+  editMarca.value     = p.marca    || "";
+  editUnidad.value    = p.unidad   || "pza";
+  editCantidad.value  = p.cantidad ?? "";
+  editTotal.value     = p.total    ?? "";
+  editSubtitle.textContent = `Editando: ${p.nombre}`;
+
+  modalEdit.style.display = "flex";
+  setTimeout(() => editNombre.focus(), 100);
+};
+
+// Cerrar modal
+modalEditCancel.addEventListener("click", () => {
+  modalEdit.style.display = "none";
+  editTargetId = null;
+});
+modalEdit.addEventListener("click", (e) => {
+  if (e.target === modalEdit) {
+    modalEdit.style.display = "none";
+    editTargetId = null;
+  }
+});
+
+// Guardar cambios
+modalEditConfirm.addEventListener("click", async () => {
+  if (!editTargetId) return;
+
+  const nombre   = editNombre.value.trim();
+  const marca    = editMarca.value.trim();
+  const unidad   = editUnidad.value;
+  const cantidad = parseFloat(editCantidad.value) || 0;
+  const total    = parseFloat(editTotal.value)    || 0;
+
+  if (!nombre) { showToast("El nombre no puede estar vacío", "error"); editNombre.focus(); return; }
+  if (!marca)  { showToast("La marca no puede estar vacía", "error"); editMarca.focus(); return; }
+
+  const enableBtn = () => { modalEditConfirm.disabled = false; modalEditConfirm.style.opacity = "1"; };
+  modalEditConfirm.disabled     = true;
+  modalEditConfirm.style.opacity = "0.6";
+
+  try {
+    await updateProduct(editTargetId, { nombre, marca, unidad, cantidad, total });
+    showToast("✏️ Producto actualizado correctamente", "success");
+    modalEdit.style.display = "none";
+    editTargetId = null;
+  } catch (err) {
+    console.error("Error editando producto:", err);
+    showToast("Error al guardar los cambios", "error");
+  } finally {
+    enableBtn();
+  }
+});
+
+// Permitir guardar con Enter desde cualquier campo del modal
+modalEdit.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) modalEditConfirm.click();
+  if (e.key === "Escape") { modalEdit.style.display = "none"; editTargetId = null; }
 });

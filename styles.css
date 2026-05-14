@@ -947,3 +947,88 @@ tr.selected td { border-bottom-color: rgba(76,174,227,0.2); }
   color: var(--coral);
   background: rgba(232,104,90,0.06);
 }
+
+/* ======= BOTÓN EDITAR EN TABLA ======= */
+.btn-icon.edit:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ======= MODAL EDITAR ======= */
+.modal-edit-box {
+  max-width: 460px;
+  text-align: left;
+}
+.edit-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.edit-icon {
+  font-size: 2rem;
+  color: var(--blue);
+  background: rgba(76,174,227,0.12);
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.edit-modal-header h3 {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.edit-modal-header p { font-size: 0.82rem; color: var(--text-muted); }
+
+.modal-edit-box .form-group { margin-bottom: 13px; }
+.modal-edit-box .form-group label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+.modal-edit-box .form-group label i { color: var(--blue); margin-right: 5px; }
+.modal-edit-box .form-group input,
+.modal-edit-box .form-group select {
+  width: 100%;
+  background: var(--dark2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  padding: 9px 13px;
+  outline: none;
+  transition: var(--transition);
+  appearance: none;
+}
+.modal-edit-box .form-group input:focus,
+.modal-edit-box .form-group select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(76,174,227,0.12);
+}
+.modal-edit-box .form-group select option { background: var(--dark2); }
+
+.edit-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btn-edit-confirm {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+  color: #fff;
+  flex: 1;
+  box-shadow: 0 4px 14px rgba(76,174,227,0.3);
+}
+.btn-edit-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76,174,227,0.45);
+}

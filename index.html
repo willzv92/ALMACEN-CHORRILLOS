@@ -182,6 +182,61 @@
 
   </main>
 
+  <!-- MODAL: Editar Producto -->
+  <div id="modal-edit" class="modal-overlay" style="display:none">
+    <div class="modal-box modal-edit-box">
+      <div class="edit-modal-header">
+        <i class="fas fa-pen-to-square edit-icon"></i>
+        <div>
+          <h3>Editar Producto</h3>
+          <p id="edit-subtitle">Modifica los campos que necesites</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-tag"></i> Producto</label>
+        <input type="text" id="edit-nombre" placeholder="Nombre del producto" autocomplete="off"/>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-industry"></i> Marca</label>
+        <input type="text" id="edit-marca" placeholder="Marca" autocomplete="off"/>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-ruler"></i> Unidad</label>
+        <select id="edit-unidad">
+          <option value="pza">Pieza (pza)</option>
+          <option value="paquete">Paquete</option>
+          <option value="resma">Resma</option>
+          <option value="caja">Caja</option>
+          <option value="rollo">Rollo</option>
+          <option value="juego">Juego</option>
+          <option value="kg">Kilogramo (kg)</option>
+          <option value="g">Gramo (g)</option>
+          <option value="l">Litro (l)</option>
+          <option value="ml">Mililitro (ml)</option>
+          <option value="m">Metro (m)</option>
+          <option value="cm">Centímetro (cm)</option>
+          <option value="unid">Unidad (unid)</option>
+        </select>
+      </div>
+      <div class="edit-row">
+        <div class="form-group">
+          <label><i class="fas fa-sort-numeric-up"></i> Cantidad</label>
+          <input type="number" id="edit-cantidad" placeholder="0" min="0"/>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-dollar-sign"></i> Total (S/.)</label>
+          <input type="number" id="edit-total" placeholder="0.00" min="0" step="0.01"/>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:20px">
+        <button class="btn btn-ghost" id="modal-edit-cancel">Cancelar</button>
+        <button class="btn btn-edit-confirm" id="modal-edit-confirm">
+          <i class="fas fa-save"></i> Guardar cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: Eliminar -->
   <div id="modal-delete" class="modal-overlay" style="display:none">
     <div class="modal-box">
