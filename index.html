@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Almacén ArqCopy Chorrillos</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo-area">
+        <img src="logo.jpg" alt="ArqCopy Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-text').style.display='flex'"/>
+        <div id="logo-text" class="logo-text-fallback" style="display:none">
+          <span class="logo-arq">Arq</span><span class="logo-dash">-</span><span class="logo-copy">Copy</span>
+        </div>
+        <div class="header-title">
+          <h1>Almacén <span>ArqCopy</span></h1>
+          <p class="subtitle"><i class="fas fa-map-marker-alt"></i> Chorrillos</p>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat-pill">
+          <i class="fas fa-boxes"></i>
+          <span id="total-products">0</span>
+          <label>Productos</label>
+        </div>
+        <div class="stat-pill">
+          <i class="fas fa-cubes"></i>
+          <span id="total-stock">0</span>
+          <label>Stock Total</label>
+        </div>
+        <div class="stat-pill warning-pill" id="low-stock-pill" style="display:none">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span id="low-stock-count">0</span>
+          <label>Stock Bajo</label>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <aside class="panel panel-form">
+      <div class="panel-header">
+        <i class="fas fa-plus-circle"></i>
+        <h2>Registrar Producto</h2>
+      </div>
+
+      <div class="form-group">
+        <label for="prod-nombre"><i class="fas fa-tag"></i> Producto</label>
+        <input type="text" id="prod-nombre" placeholder="Ej: Papel Bond A4" autocomplete="off"/>
+      </div>
+      <div class="form-group">
+        <label for="prod-marca"><i class="fas fa-industry"></i> Marca</label>
+        <input type="text" id="prod-marca" placeholder="Ej: Navigator" autocomplete="off"/>
+      </div>
+      <div class="form-group">
+        <label for="prod-unidad"><i class="fas fa-ruler"></i> Unidad</label>
+        <select id="prod-unidad">
+          <option value="pza">Pieza (pza)</option>
+          <option value="paquete">Paquete</option>
+          <option value="resma">Resma</option>
+          <option value="caja">Caja</option>
+          <option value="rollo">Rollo</option>
+          <option value="juego">Juego</option>
+          <option value="kg">Kilogramo (kg)</option>
+          <option value="g">Gramo (g)</option>
+          <option value="l">Litro (l)</option>
+          <option value="ml">Mililitro (ml)</option>
+          <option value="m">Metro (m)</option>
+          <option value="cm">Centímetro (cm)</option>
+          <option value="unid">Unidad (unid)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="prod-cantidad"><i class="fas fa-sort-numeric-up"></i> Cantidad Inicial</label>
+        <input type="number" id="prod-cantidad" placeholder="0" min="0"/>
+      </div>
+      <div class="form-group">
+        <label for="prod-total"><i class="fas fa-dollar-sign"></i> Precio Total (S/.)</label>
+        <input type="number" id="prod-total" placeholder="0.00" min="0" step="0.01"/>
+      </div>
+
+      <button class="btn btn-clear" id="btn-clear">
+        <i class="fas fa-eraser"></i> Limpiar campos
+      </button>
+
+      <button class="btn btn-primary" id="btn-add">
+        <i class="fas fa-save"></i> Guardar Producto
+      </button>
+
+      <div class="panel-header mt-24">
+        <i class="fas fa-exchange-alt"></i>
+        <h2>Movimientos</h2>
+      </div>
+
+      <div class="form-group">
+        <label for="mov-producto"><i class="fas fa-search"></i> Buscar Producto</label>
+        <select id="mov-producto">
+          <option value="">-- Seleccionar --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="mov-cantidad"><i class="fas fa-hashtag"></i> Cantidad</label>
+        <input type="number" id="mov-cantidad" placeholder="0" min="1"/>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-entrada" id="btn-entrada">
+          <i class="fas fa-arrow-down"></i> Entrada
+        </button>
+        <button class="btn btn-salida" id="btn-salida">
+          <i class="fas fa-arrow-up"></i> Salida
+        </button>
+      </div>
+    </aside>
+
+    <section class="panel panel-table">
+      <div class="panel-header space-between flex-wrap">
+        <div class="panel-title-left">
+          <i class="fas fa-warehouse"></i>
+          <h2>Inventario</h2>
+        </div>
+        <div class="toolbar-right">
+          <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="search-input" placeholder="Filtrar productos..."/>
+          </div>
+          <div class="io-buttons">
+            <button class="btn btn-export" id="btn-export" title="Exportar a JSON">
+              <i class="fas fa-file-export"></i> Exportar
+            </button>
+            <label class="btn btn-import" title="Importar desde JSON">
+              <i class="fas fa-file-import"></i> Importar
+              <input type="file" id="import-file" accept=".json" style="display:none"/>
+            </label>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- BARRA DE SELECCIÓN -->
+      <div id="selection-bar" class="selection-bar" style="display:none">
+        <div class="sel-info">
+          <i class="fas fa-check-square"></i>
+          <span id="sel-count">0</span> producto(s) seleccionado(s)
+        </div>
+        <div class="sel-actions">
+          <button class="btn btn-sel-all" id="btn-sel-all"><i class="fas fa-check-double"></i> Todos</button>
+          <button class="btn btn-sel-none" id="btn-sel-none"><i class="fas fa-times"></i> Ninguno</button>
+          <button class="btn btn-pdf" id="btn-pdf"><i class="fas fa-file-pdf"></i> Generar PDF</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="inventory-table">
+          <thead>
+            <tr>
+              <th class="th-check"><input type="checkbox" id="chk-all" title="Seleccionar todos"/></th>
+              <th>#</th>
+              <th class="sortable" data-col="nombre">Producto <i class="fas fa-sort sort-icon"></i></th>
+              <th class="sortable" data-col="marca">Marca <i class="fas fa-sort sort-icon"></i></th>
+              <th class="sortable active asc" data-col="cantidad">Cantidad <i class="fas fa-sort-up sort-icon"></i></th>
+              <th>Unidad</th>
+              <th class="sortable" data-col="total">Total (S/.) <i class="fas fa-sort sort-icon"></i></th>
+              <th class="sortable" data-col="estado">Estado <i class="fas fa-sort sort-icon"></i></th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+        <div id="empty-state" class="empty-state">
+          <i class="fas fa-box-open"></i>
+          <p>No hay productos en el almacén.</p>
+          <span>Agrega tu primer producto usando el formulario.</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: Eliminar -->
+  <div id="modal-delete" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <i class="fas fa-exclamation-triangle modal-icon"></i>
+      <h3>¿Eliminar Producto?</h3>
+      <p>Esta acción no se puede deshacer.</p>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="modal-cancel">Cancelar</button>
+        <button class="btn btn-danger" id="modal-confirm">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Alerta Stock Bajo -->
+  <div id="modal-alert" class="modal-overlay" style="display:none">
+    <div class="modal-box modal-alert-box">
+      <div class="alert-header">
+        <i class="fas fa-exclamation-triangle alert-icon pulse"></i>
+        <h3>Alerta de Stock Bajo</h3>
+        <p>Los siguientes productos requieren reposición urgente:</p>
+      </div>
+      <div id="alert-list" class="alert-list"></div>
+      <div class="btn-row" style="margin-top:20px">
+        <button class="btn btn-primary" id="modal-alert-close">
+          <i class="fas fa-check"></i> Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Confirmar Importación -->
+  <div id="modal-import" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <i class="fas fa-file-import modal-icon import-icon"></i>
+      <h3>Importar Base de Datos</h3>
+      <p id="import-summary">Se importarán X productos.</p>
+      <div class="import-options">
+        <label class="radio-option">
+          <input type="radio" name="import-mode" value="merge" checked/>
+          <span><strong>Combinar</strong> — agrega los productos al inventario actual</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="import-mode" value="replace"/>
+          <span><strong>Reemplazar</strong> — borra todo y carga solo los importados</span>
+        </label>
+      </div>
+      <div class="btn-row" style="margin-top:20px">
+        <button class="btn btn-ghost" id="modal-import-cancel">Cancelar</button>
+        <button class="btn btn-primary" id="modal-import-confirm"><i class="fas fa-check"></i> Importar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Vista previa PDF -->
+  <div id="modal-pdf" class="modal-overlay" style="display:none">
+    <div class="modal-box modal-pdf-box">
+      <div class="pdf-modal-header">
+        <i class="fas fa-file-pdf pdf-icon"></i>
+        <div>
+          <h3>Generar Lista PDF</h3>
+          <p id="pdf-summary">X productos seleccionados</p>
+        </div>
+      </div>
+      <div class="pdf-options">
+        <div class="form-group">
+          <label><i class="fas fa-heading"></i> Título del reporte</label>
+          <input type="text" id="pdf-title" value="Inventario ArqCopy Chorrillos"/>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-sticky-note"></i> Nota / subtítulo (opcional)</label>
+          <input type="text" id="pdf-note" placeholder="Ej: Reporte mensual — Mayo 2025"/>
+        </div>
+        <div class="pdf-cols-label"><i class="fas fa-columns"></i> Columnas a incluir</div>
+        <div class="pdf-cols-grid">
+          <label class="chk-col"><input type="checkbox" class="pdf-col-chk" value="nombre" checked disabled/> Producto</label>
+          <label class="chk-col"><input type="checkbox" class="pdf-col-chk" value="marca" checked/> Marca</label>
+          <label class="chk-col"><input type="checkbox" class="pdf-col-chk" value="unidad" checked/> Unidad</label>
+          <label class="chk-col"><input type="checkbox" class="pdf-col-chk" value="cantidad" checked/> Cantidad</label>
+          <label class="chk-col"><input type="checkbox" class="pdf-col-chk" value="total" checked/> Total (S/.)</label>
+          <label class="chk-col"><input type="checkbox" class="pdf-col-chk" value="estado" checked/> Estado</label>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:22px">
+        <button class="btn btn-ghost" id="modal-pdf-cancel">Cancelar</button>
+        <button class="btn btn-pdf-confirm" id="modal-pdf-confirm">
+          <i class="fas fa-download"></i> Descargar PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
