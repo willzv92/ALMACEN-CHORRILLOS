@@ -12,9 +12,7 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
-  serverTimestamp,
-  query,
-  orderBy
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ══════════════════════════════════════════════════════════════
@@ -119,14 +117,15 @@ async function init() {
 
 // ── Suscripción en tiempo real Firestore ──────────────────────
 function subscribeFirestore() {
-  const q = query(prodCollection, orderBy("createdAt", "asc"));
-  onSnapshot(q, (snapshot) => {
+  // Sin orderBy para evitar requerir índice compuesto en Firestore.
+  // El ordenamiento se hace en cliente con sortProducts().
+  onSnapshot(prodCollection, (snapshot) => {
     allProducts = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
     renderTable();
     checkLowStock();
   }, (err) => {
-    console.error("Firestore error:", err);
-    showToast("Error de conexión Firestore", "error");
+    console.error("Firestore onSnapshot error:", err);
+    showToast("⚠️ Error de conexión con Firebase", "error");
   });
 }
 
