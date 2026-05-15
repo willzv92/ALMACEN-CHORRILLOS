@@ -441,9 +441,9 @@ function populateSelect(products) {
 btnAdd.addEventListener("click", async () => {
   if (btnAdd.disabled) return;
 
-  const nombre   = inputNombre.value.trim();
-  const marca    = inputMarca.value.trim();
-  const unidad   = inputUnidad.value;
+  const nombre   = inputNombre.value.trim().toUpperCase();
+  const marca    = inputMarca.value.trim().toUpperCase();
+  const unidad   = inputUnidad.value.toUpperCase();
   const cantidad = parseInt(inputCantidad.value) || 0;
   const total    = parseFloat(inputTotal.value)  || 0;
 
@@ -462,7 +462,7 @@ btnAdd.addEventListener("click", async () => {
     inputMarca.value    = "";
     inputCantidad.value = "";
     inputTotal.value    = "";
-    inputUnidad.value   = "pza";
+    inputUnidad.value   = "CAJA";
     inputNombre.focus();
     showToast("✅ Producto guardado correctamente", "success");
   } catch (err) {
@@ -478,7 +478,7 @@ btnAdd.addEventListener("click", async () => {
 btnClear.addEventListener("click", () => {
   inputNombre.value   = "";
   inputMarca.value    = "";
-  inputUnidad.value   = "pza";
+  inputUnidad.value   = "CAJA";
   inputCantidad.value = "";
   inputTotal.value    = "";
   inputNombre.focus();
@@ -1079,9 +1079,9 @@ modalEdit.addEventListener("click", (e) => {
 modalEditConfirm.addEventListener("click", async () => {
   if (!editTargetId) return;
 
-  const nombre   = editNombre.value.trim();
-  const marca    = editMarca.value.trim();
-  const unidad   = editUnidad.value;
+  const nombre   = editNombre.value.trim().toUpperCase();
+  const marca    = editMarca.value.trim().toUpperCase();
+  const unidad   = editUnidad.value.toUpperCase();
   const cantidad = parseFloat(editCantidad.value) || 0;
   const total    = parseFloat(editTotal.value)    || 0;
 
