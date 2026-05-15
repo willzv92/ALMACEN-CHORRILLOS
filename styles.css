@@ -366,20 +366,22 @@ body {
 /* ======= TABLE ======= */
 .table-wrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: auto;
 }
 
 thead th {
   font-family: var(--font-head);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.6px;
   color: var(--blue);
-  padding: 12px 14px;
+  padding: 10px 8px;
   text-align: left;
   border-bottom: 2px solid var(--border);
   white-space: nowrap;
@@ -392,31 +394,78 @@ tbody tr {
 tbody tr:hover { background: rgba(76,174,227,0.06); }
 
 tbody td {
-  padding: 13px 14px;
-  font-size: 0.9rem;
+  padding: 10px 8px;
+  font-size: 0.85rem;
   color: var(--text);
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 .td-number {
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  width: 32px;
 }
 
-.td-product { font-weight: 600; color: var(--text); }
-.td-brand { color: var(--text-muted); }
+/* Producto es la única columna que puede hacer wrap */
+.td-product {
+  font-weight: 600;
+  color: var(--text);
+  white-space: normal;
+  min-width: 120px;
+  max-width: 200px;
+}
+
+.td-brand {
+  color: var(--text-muted);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .td-qty {
   font-family: var(--font-head);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--blue);
+  text-align: center;
+  width: 60px;
+}
+
+.td-unit {
+  font-size: 0.72rem;
+  color: var(--blue-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  width: 70px;
+  text-align: center;
 }
 
 .td-total {
   font-family: var(--font-head);
   font-weight: 600;
   color: var(--coral-light);
+  white-space: nowrap;
+}
+
+/* Columna de acciones fija a la derecha */
+.action-col-head,
+.action-cell {
+  position: sticky;
+  right: 0;
+  background: var(--card);
+  z-index: 2;
+  box-shadow: -3px 0 10px rgba(0,0,0,0.25);
+}
+thead th.action-col-head {
+  background: var(--card);
+}
+tbody tr:hover td.action-cell {
+  background: #1e3050;
+}
+tbody tr.selected td.action-cell {
+  background: #1a3060;
 }
 
 /* STATUS BADGE */
@@ -806,14 +855,6 @@ tbody td {
 .row-low:hover    { background: rgba(245,200,66,0.1) !important; }
 .row-critical:hover { background: rgba(232,90,90,0.12) !important; }
 
-/* ======= TD UNIT ======= */
-.td-unit {
-  font-size: 0.78rem;
-  color: var(--blue-light);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 600;
-}
 
 /* ======= TOOLBAR DERECHO (buscar + botones IO) ======= */
 .toolbar-right {
@@ -1166,12 +1207,13 @@ tr.selected td { border-bottom-color: rgba(76,174,227,0.2); }
 
 /* ======= COLUMNAS DE FECHA ======= */
 .td-date {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   white-space: nowrap;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.1px;
+  min-width: 110px;
+  max-width: 130px;
 }
-thead th:has(+ th[class=""]) { }
 
 /* ======= TOUCH & MOBILE UX ======= */
 /* Evitar zoom en inputs en iOS */
