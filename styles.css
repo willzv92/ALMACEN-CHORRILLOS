@@ -545,20 +545,151 @@ tbody td {
 .config-warning.visible { display: block; }
 .config-warning a { color: var(--blue); }
 
-/* ======= RESPONSIVE ======= */
-@media (max-width: 900px) {
+/* ══════════════════════════════════════════════
+   RESPONSIVE — Tablet (≤ 1024px)
+══════════════════════════════════════════════ */
+@media (max-width: 1024px) {
   .main-container {
-    grid-template-columns: 1fr;
-    padding: 0 14px 40px;
+    grid-template-columns: 280px 1fr;
+    gap: 16px;
+    padding: 16px 16px 40px;
   }
-  .header-inner { flex-wrap: wrap; gap: 12px; }
-  .search-box input { width: 120px; }
+  .search-box input { width: 140px; }
+  .header-title h1 { font-size: 1.35rem; }
 }
 
-@media (max-width: 500px) {
-  .header-stats { flex-wrap: wrap; }
-  .panel { padding: 16px; }
-  .btn { font-size: 0.9rem; padding: 10px 12px; }
+/* ══════════════════════════════════════════════
+   RESPONSIVE — Mobile (≤ 768px)
+══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Header */
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+  .logo-area { gap: 10px; }
+  .logo-img  { height: 48px; width: 48px; }
+  .header-title h1 { font-size: 1.2rem; }
+  .subtitle  { font-size: 0.72rem; }
+  .header-stats {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  .stat-pill {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+  }
+  .stat-pill span { font-size: 1.2rem; }
+  .stat-pill label { font-size: 0.6rem; }
+
+  /* Layout: una columna, formulario arriba */
+  .main-container {
+    grid-template-columns: 1fr;
+    padding: 12px 12px 80px;
+    gap: 14px;
+  }
+
+  /* Formulario colapsable en mobile */
+  .panel-form {
+    position: relative;
+  }
+
+  /* Barra de inventario */
+  .panel-header.space-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .toolbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .search-box { flex: 1; }
+  .search-box input { width: 100%; min-width: 0; }
+  .io-buttons { flex-shrink: 0; }
+  .btn-export,
+  .btn-import { font-size: 0; padding: 8px 12px; }
+  .btn-export i,
+  .btn-import i { font-size: 1rem; margin: 0; }
+
+  /* Tabla — scroll horizontal en mobile */
+  .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 640px; }
+  thead th { font-size: 0.72rem; padding: 10px 8px; }
+  tbody td  { font-size: 0.82rem; padding: 10px 8px; }
+  .td-date  { font-size: 0.68rem; }
+
+  /* Botones de acción más compactos */
+  .action-cell { gap: 4px; }
+  .btn-icon    { padding: 6px 8px; font-size: 0.78rem; }
+
+  /* Barra de selección */
+  .selection-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .sel-actions { width: 100%; justify-content: flex-end; }
+  .btn-pdf     { font-size: 0.82rem; padding: 7px 12px; }
+
+  /* Botones del formulario en fila */
+  .btn-row { flex-wrap: wrap; }
+  .btn-entrada,
+  .btn-salida { font-size: 0.88rem; padding: 10px 12px; }
+
+  /* Modales */
+  .modal-box { padding: 24px 18px; }
+  .modal-pdf-box,
+  .modal-alert-box,
+  .modal-edit-box { max-width: 96vw; }
+  .pdf-cols-grid { grid-template-columns: repeat(2, 1fr); }
+  .edit-row { grid-template-columns: 1fr; gap: 0; }
+
+  /* Toast */
+  .toast {
+    bottom: 16px;
+    right: 12px;
+    left: 12px;
+    max-width: none;
+    font-size: 0.85rem;
+    padding: 12px 16px;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE — Small Mobile (≤ 420px)
+══════════════════════════════════════════════ */
+@media (max-width: 420px) {
+  .logo-img { height: 40px; width: 40px; }
+  .header-title h1 { font-size: 1.05rem; }
+  .panel { padding: 14px; }
+  .panel-header h2 { font-size: 1rem; }
+
+  .stat-pill { padding: 6px 8px; }
+  .stat-pill span { font-size: 1.1rem; }
+
+  /* Ocultar texto en botones IO, solo icono */
+  .btn-export span,
+  .btn-import span { display: none; }
+
+  /* Columnas de fecha: ocultar en pantallas muy pequeñas para no saturar */
+  .td-date,
+  thead th:nth-child(8),
+  thead th:nth-child(9) { display: none; }
+  tbody td:nth-child(8),
+  tbody td:nth-child(9) { display: none; }
+
+  table { min-width: 480px; }
+
+  .pdf-cols-grid { grid-template-columns: 1fr 1fr; }
+  .modal-box { padding: 20px 14px; }
+  .alert-list { max-height: 200px; }
 }
 
 /* ======= SORTABLE HEADERS ======= */
@@ -1031,4 +1162,59 @@ tr.selected td { border-bottom-color: rgba(76,174,227,0.2); }
 .btn-edit-confirm:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(76,174,227,0.45);
+}
+
+/* ======= COLUMNAS DE FECHA ======= */
+.td-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+thead th:has(+ th[class=""]) { }
+
+/* ======= TOUCH & MOBILE UX ======= */
+/* Evitar zoom en inputs en iOS */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Área táctil mínima para botones en móvil */
+@media (max-width: 768px) {
+  .btn, .btn-icon, .sortable {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .btn-icon {
+    min-width: 36px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Checkbox más grande en táctil */
+  .th-check input[type="checkbox"],
+  .td-check input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+  /* Panel formulario con sombra inferior para separar visualmente */
+  .panel-form {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  /* Tabla con indicador de scroll */
+  .table-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 24px;
+    background: linear-gradient(to right, transparent, rgba(17,24,39,0.8));
+    pointer-events: none;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .panel-table { position: relative; overflow: hidden; }
 }
