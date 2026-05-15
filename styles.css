@@ -63,9 +63,9 @@ body {
 }
 
 .header-inner {
-  max-width: 1400px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 14px 28px;
+  padding: 14px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -160,12 +160,13 @@ body {
 
 /* ======= MAIN LAYOUT ======= */
 .main-container {
-  max-width: 1400px;
-  margin: 28px auto;
-  padding: 0 24px 40px;
+  max-width: 1280px;
+  width: 100%;
+  margin: 24px auto;
+  padding: 0 32px 40px;
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 24px;
+  grid-template-columns: 360px 1fr;
+  gap: 28px;
   align-items: start;
 }
 
@@ -597,14 +598,22 @@ tbody tr.selected td.action-cell {
 /* ══════════════════════════════════════════════
    RESPONSIVE — Tablet (≤ 1024px)
 ══════════════════════════════════════════════ */
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
+  .main-container {
+    grid-template-columns: 320px 1fr;
+    gap: 20px;
+    padding: 16px 20px 40px;
+  }
+  .search-box input { width: 140px; }
+  .header-title h1 { font-size: 1.35rem; }
+}
+
+@media (max-width: 900px) {
   .main-container {
     grid-template-columns: 280px 1fr;
     gap: 16px;
     padding: 16px 16px 40px;
   }
-  .search-box input { width: 140px; }
-  .header-title h1 { font-size: 1.35rem; }
 }
 
 /* ══════════════════════════════════════════════
