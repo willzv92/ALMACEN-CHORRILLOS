@@ -132,11 +132,33 @@ function subscribeFirestore() {
 // ══════════════════════════════════════════════════════════════
 //  CRUD
 // ══════════════════════════════════════════════════════════════
+function nowISO() {
+  return new Date().toISOString();
+}
+
+function fmtDate(iso) {
+  if (!iso) return "—";
+  try {
+    // Firestore Timestamp object
+    const d = iso.toDate ? iso.toDate() : new Date(iso);
+    return d.toLocaleDateString("es-PE", { day:"2-digit", month:"2-digit", year:"numeric" })
+           + " " + d.toLocaleTimeString("es-PE", { hour:"2-digit", minute:"2-digit" });
+  } catch { return "—"; }
+}
+
 async function addProduct(data) {
+  const now = nowISO();
   if (isConfigured && db) {
-    await addDoc(prodCollection, { ...data, createdAt: serverTimestamp() });
+    await addDoc(prodCollection, {
+      ...data,
+      fechaEntrada: now,
+      fechaSalida:  "—",
+      createdAt:    serverTimestamp()
+    });
   } else {
-    data.id = Date.now().toString();
+    data.id          = Date.now().toString();
+    data.fechaEntrada = now;
+    data.fechaSalida  = "—";
     localProducts.push(data);
     allProducts = [...localProducts];
     saveLocal();
@@ -361,6 +383,8 @@ function renderTable() {
         <td class="td-qty">${qty}</td>
         <td class="td-unit">${escHtml(unit)}</td>
         <td class="td-total">S/. ${total.toFixed(2)}</td>
+        <td class="td-date">${fmtDate(p.fechaEntrada)}</td>
+        <td class="td-date">${fmtDate(p.fechaSalida)}</td>
         <td>${badge}</td>
         <td class="action-cell">
           <button class="btn btn-icon" title="Entrada rápida +1" onclick="quickMove('${p.id}', 1)">
@@ -460,9 +484,12 @@ async function movimiento(tipo) {
   }
 
   const nuevaCant = tipo === "entrada" ? cantActual + qty : cantActual - qty;
+  const fechaUpdate = tipo === "entrada"
+    ? { cantidad: nuevaCant, fechaEntrada: nowISO() }
+    : { cantidad: nuevaCant, fechaSalida:  nowISO() };
 
   try {
-    await updateProduct(id, { cantidad: nuevaCant });
+    await updateProduct(id, fechaUpdate);
     inputMovQty.value = "";
     const unit = producto.unidad || "unid";
     showToast(
@@ -481,7 +508,10 @@ window.quickMove = async function(id, delta) {
   const producto = allProducts.find(p => p.id === id);
   if (!producto) return;
   const nuevaCant = Math.max(0, (Number(producto.cantidad) || 0) + delta);
-  await updateProduct(id, { cantidad: nuevaCant });
+  const fechaUpdate = delta > 0
+    ? { cantidad: nuevaCant, fechaEntrada: nowISO() }
+    : { cantidad: nuevaCant, fechaSalida:  nowISO() };
+  await updateProduct(id, fechaUpdate);
   showToast(delta > 0 ? "📦 +1 registrado" : "📤 -1 registrado", "success");
 };
 
@@ -897,12 +927,14 @@ modalPdfConfirm.addEventListener("click", () => {
 
   // ── Definir columnas de la tabla ─────────────────────────────
   const colDefs = {
-    nombre:   { header: "Producto",    dataKey: "nombre" },
-    marca:    { header: "Marca",       dataKey: "marca" },
-    unidad:   { header: "Unidad",      dataKey: "unidad" },
-    cantidad: { header: "Cantidad",    dataKey: "cantidad" },
-    total:    { header: "Total (S/.)", dataKey: "total" },
-    estado:   { header: "Estado",      dataKey: "estado" },
+    nombre:       { header: "Producto",      dataKey: "nombre" },
+    marca:        { header: "Marca",         dataKey: "marca" },
+    unidad:       { header: "Unidad",        dataKey: "unidad" },
+    cantidad:     { header: "Cantidad",      dataKey: "cantidad" },
+    total:        { header: "Total (S/.)",   dataKey: "total" },
+    fechaEntrada: { header: "Últ. Entrada",  dataKey: "fechaEntrada" },
+    fechaSalida:  { header: "Últ. Salida",   dataKey: "fechaSalida" },
+    estado:       { header: "Estado",        dataKey: "estado" },
   };
 
   const columns = colsActivas.map(k => colDefs[k]).filter(Boolean);
@@ -912,7 +944,9 @@ modalPdfConfirm.addEventListener("click", () => {
     const total = Number(p.total)    || 0;
     const estado = qty === 0 ? "Sin stock" : qty <= LOW_STOCK_THRESHOLD ? "Stock bajo" : "Disponible";
     const row = { nombre: p.nombre, marca: p.marca, unidad: p.unidad || "unid",
-                  cantidad: qty, total: `S/. ${total.toFixed(2)}`, estado };
+                  cantidad: qty, total: `S/. ${total.toFixed(2)}`,
+                  fechaEntrada: fmtDate(p.fechaEntrada), fechaSalida: fmtDate(p.fechaSalida),
+                  estado };
     return colsActivas.reduce((acc, k) => { acc[k] = row[k]; return acc; }, {});
   });
 
