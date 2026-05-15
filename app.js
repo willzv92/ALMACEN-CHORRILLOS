@@ -117,10 +117,21 @@ async function init() {
 
 // ── Suscripción en tiempo real Firestore ──────────────────────
 function subscribeFirestore() {
-  // Sin orderBy para evitar requerir índice compuesto en Firestore.
-  // El ordenamiento se hace en cliente con sortProducts().
   onSnapshot(prodCollection, (snapshot) => {
     allProducts = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // Rellena fechas faltantes en documentos que existían antes de esta versión
+    const now = nowISO();
+    snapshot.docs.forEach(d => {
+      const data = d.data();
+      const updates = {};
+      if (!data.fechaEntrada) updates.fechaEntrada = now;
+      if (!data.fechaSalida)  updates.fechaSalida  = "—";
+      if (Object.keys(updates).length > 0) {
+        updateDoc(doc(db, "productos", d.id), updates).catch(console.error);
+      }
+    });
+
     renderTable();
     checkLowStock();
   }, (err) => {
@@ -136,13 +147,25 @@ function nowISO() {
   return new Date().toISOString();
 }
 
-function fmtDate(iso) {
-  if (!iso) return "—";
+function fmtDate(val) {
+  // Nulo, undefined o el literal "—"
+  if (!val || val === "—") return "—";
   try {
-    // Firestore Timestamp object
-    const d = iso.toDate ? iso.toDate() : new Date(iso);
-    return d.toLocaleDateString("es-PE", { day:"2-digit", month:"2-digit", year:"numeric" })
-           + " " + d.toLocaleTimeString("es-PE", { hour:"2-digit", minute:"2-digit" });
+    let d;
+    if (val.toDate) {
+      // Firestore Timestamp
+      d = val.toDate();
+    } else if (typeof val === "object" && val.seconds) {
+      // Firestore Timestamp serializado { seconds, nanoseconds }
+      d = new Date(val.seconds * 1000);
+    } else {
+      // ISO string
+      d = new Date(val);
+    }
+    if (isNaN(d.getTime())) return "—";
+    const fecha = d.toLocaleDateString("es-PE", { day:"2-digit", month:"2-digit", year:"numeric" });
+    const hora  = d.toLocaleTimeString("es-PE", { hour:"2-digit", minute:"2-digit" });
+    return `${fecha} ${hora}`;
   } catch { return "—"; }
 }
 
